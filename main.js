@@ -17,6 +17,7 @@ exec(`git rev-list --tags=${filter} --max-count=1`, (err, rev, stderr) => {
     
     rev = rev.trim()
     console.log('\x1b[32m%s\x1b[0m', `Found revision: ${rev}`);
+    console.log('\x1b[32m%s\x1b[0m', `Revision length: ${rev.length}`);
 
     exec(`git describe --tags ${rev}`, (err, tag, stderr) => {
         if (err) {
