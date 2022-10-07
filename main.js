@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const { reverse } = require('dns');
 
 var filter = '*';
 if (process.env.INPUT_PATTERN) {
@@ -16,8 +17,15 @@ exec(`git rev-list --tags=${filter} --max-count=1`, (err, rev, stderr) => {
 
     
     rev = rev.trim()
-    console.log('\x1b[32m%s\x1b[0m', `Found revision: ${rev}`);
-    console.log('\x1b[32m%s\x1b[0m', `Revision length: ${rev.length}`);
+    if(rev.length == 0) {
+        console.log('\x1b[33m%s\x1b[0m', 'Did not find matching tag');
+        if (process.env.INPUT_FALLBACK) {
+            console.log('\x1b[33m%s\x1b[0m', 'Will use fallback tag and HEAD commit');
+        } else {
+            console.log('\x1b[33m%s\x1b[0m', 'No fallback tag specified');
+            process.exit(1);
+        }
+    }
 
     exec(`git describe --tags ${rev}`, (err, tag, stderr) => {
         if (err) {
