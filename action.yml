@@ -7,6 +7,9 @@ inputs:
   fallback:
     description: 'Fallback tag to use when no previous tag can be found'
     required: false
+  pattern:
+    description: 'Limit tags to ones matching given shell glob. If pattern lacks ?, *, or [, /* at the end is implied'
+    required: false
 outputs:
   tag:
     description: 'Latest tag'

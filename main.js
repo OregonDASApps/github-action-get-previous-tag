@@ -1,5 +1,11 @@
 const { exec } = require('child_process');
-exec('git rev-list --tags --max-count=1', (err, rev, stderr) => {
+
+var filter = '*';
+if (process.env.INPUT_PATTERN) {
+    filter = process.env.INPUT_PATTERN;
+}
+
+exec('git rev-list --tags=${filter} --max-count=1', (err, rev, stderr) => {
     if (err) {
         console.log('\x1b[33m%s\x1b[0m', 'Could not find any revisions because: ');
         console.log('\x1b[31m%s\x1b[0m', stderr);
