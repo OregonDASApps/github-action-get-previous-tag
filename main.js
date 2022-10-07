@@ -5,7 +5,7 @@ if (process.env.INPUT_PATTERN) {
     filter = process.env.INPUT_PATTERN;
 }
 
-console.log('\x1b[33m%s\x1b[0m', `Filtering with: ${filter}`);
+console.log('\x1b[32m%s\x1b[0m', `Filtering with: ${filter}`);
 
 exec(`git rev-list --tags=${filter} --max-count=1`, (err, rev, stderr) => {
     if (err) {
@@ -14,7 +14,9 @@ exec(`git rev-list --tags=${filter} --max-count=1`, (err, rev, stderr) => {
         process.exit(1);
     }
 
+    
     rev = rev.trim()
+    console.log('\x1b[32m%s\x1b[0m', `Found revision: ${rev}`);
 
     exec(`git describe --tags ${rev}`, (err, tag, stderr) => {
         if (err) {
