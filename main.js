@@ -17,15 +17,7 @@ exec(`git rev-list --tags=${filter} --max-count=1`, (err, rev, stderr) => {
 
     
     rev = rev.trim()
-    if(rev.length == 0) {
-        console.log('\x1b[33m%s\x1b[0m', 'Did not find matching tag');
-        if (process.env.INPUT_FALLBACK) {
-            console.log('\x1b[33m%s\x1b[0m', 'Will use fallback tag and HEAD commit');
-        } else {
-            console.log('\x1b[33m%s\x1b[0m', 'No fallback tag specified');
-            process.exit(1);
-        }
-    }
+
 
     exec(`git describe --tags ${rev}`, (err, tag, stderr) => {
         if (err) {
@@ -41,6 +33,19 @@ exec(`git rev-list --tags=${filter} --max-count=1`, (err, rev, stderr) => {
                 process.exit(0);
             }
             process.exit(1);
+        } else {
+            if(rev.length == 0) {
+                console.log('\x1b[33m%s\x1b[0m', 'Did not find matching tag');
+                if (process.env.INPUT_FALLBACK) {
+                    console.log('\x1b[33m%s\x1b[0m', 'Will use fallback tag and HEAD commit');
+                    console.log(`::set-output name=tag::${process.env.INPUT_FALLBACK}`);
+                    console.log(`::set-output name=timestamp::${timestamp}`);
+                    process.exit(0);
+                } else {
+                    console.log('\x1b[33m%s\x1b[0m', 'No fallback tag specified');
+                    process.exit(1);
+                }
+            }    
         }
 
         tag = tag.trim()
